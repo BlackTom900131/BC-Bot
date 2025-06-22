@@ -1,0 +1,103 @@
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5;
+}
+
+.line.avg {
+  stroke: #fff7e1;
+}
+
+.line.data-line {
+  stroke: #001a8b;
+  stroke-width: 1;
+}
+
+.line.sma-long-line {
+  stroke: #8bc34a;
+}
+
+.line.sma-short-line {
+  stroke: #a2cf6e;
+}
+
+.line.ema-long-line {
+  stroke: #d3e7d4;
+}
+
+.line.ema-short-line {
+  stroke: #bbf3bd;
+}
+
+.line.base-line {
+  fill: none;
+  stroke: #ffeaa4;
+  stroke-width: 1.5;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+/* Style the dots by assigning a fill and stroke */
+
+.dot {
+  fill: #001a8b;
+  stroke: #fff;
+}
+
+.focus circle {
+  fill: none;
+  stroke: steelblue;
+}
+
+.is-first {
+  background-color: rgba(195, 111, 24, 0.2);
+}
+
+.is-over-median {
+  color: #44B39D;
+}
+
+.is-under-median {
+  color: #BF4A67;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+#game_verify_submit {
+  width: 120px;
+  margin-left: 12px;
+  background: #ffffff;
+  color: black;
+}
+
+.salt-input {
+  position: relative;
+}
+
+.salt-change-button-group {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+}
+
+.seq-red-text {
+  color: red;
+  font-weight: bold;
+}
+
+#ethercrash_user_rounds {
+  width: 100%;
+  position: relative;
+  top: -110px
+}
+
+#visits {
+  background-color: #a2cf6e;
+  border-radius: 8px;
+  padding: 0 5px;
+}

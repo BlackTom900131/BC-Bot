@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>BC Games Analyzer</title>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="description"
+    content="Useful blockchain games hash analyzer. You can use this analyzer for games like BC.Game, Bustabit, Ethercrash, etc..." />
+  <meta property="og:image:width" content="960" />
+  <meta property="og:image:height" content="585" />
+  <meta property="og:title" content="BC Graph" />
+  <meta property="og:site_name" content="BC Graph" />
+  <meta property="og:description"
+    content="Useful blockchain games hash analyzer developed. You can use this analyzer for games like BC.Game, Bustabit, Ethercrash, etc..." />
+  <meta property="og:url" content="https://bcgraph.netlify.app/" />
+  <meta property="og:image" content="img/bc-graph.png" />
+  <!-- Schema.org markup for Google+ -->
+  <meta itemprop="name" content="BC Graph" />
+  <meta itemprop="description"
+    content="Useful blockchain games hash analyzer developed. You can use this analyzer for games like BC.Game, Bustabit, Ethercrash, etc..." />
+  <meta itemprop="image" content="img/bc-graph.png" />
+  <!-- Twitter Card data -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@alberteichberg" />
+  <meta name="twitter:title" content="BC Graph" />
+  <meta name="twitter:description"
+    content="Useful blockchain games hash analyzer developed. You can use this analyzer for games like BC.Game, Bustabit, Ethercrash, etc..." />
+  <meta name="twitter:image:src" content="img/bc-graph.png" />
+  <meta name="author" content="Albert Eichberg" />
+
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="./index.css" />
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script async
+    src="https://api.countapi.xyz/hit/bcgraph.netlify.app/67556B58703273357638782F413F4428?callback=websiteVisits"></script>
+</head>
+<style>
+  .button {
+    background: #202935 !important;
+    color: #778899 !important;
+  }
+
+  .current_all_state {
+    width: 600px;
+    border-radius: 10px;
+    padding: 3px;
+    font-family: fangsong;
+    border-radius: 3px;
+    color: white;
+    font-size: 30px;
+    padding-left: 20px;
+    background: repeating-linear-gradient(45deg, rgb(29, 37, 48), rgb(32, 41, 53) 93%);
+  }
+
+  .current_state {
+    width: 600px;
+    border-bottom: 1px solid;
+    border-radius: 10px;
+    padding: 3px;
+    font-family: fangsong;
+    border-radius: 3px;
+    color: white;
+    font-size: 30px;
+    padding-left: 20px;
+  }
+
+  #game_analyze {
+    width: 21% !important;
+    border-top: 2px solid #101010;
+  }
+
+  #game_amount_input,
+  #game_hash_input,
+  #game_verify_submit {
+    background: #202935 !important;
+    color: #778899 !important;
+  }
+
+  .custom-notification {
+    position: fixed;
+    right: 24px;
+    bottom: 10px;
+    border-top: 2px solid #373232;
+    background-color: rgb(239 239 239);
+    padding: 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #d70a0a;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(255, 255, 255, 0.88);
+    display: none;
+    cursor: pointer;
+    /* Initially hidden */
+    align-items: center;
+  }
+</style>
+
+<body>
+  <section class="section" style="background: #ffffff8a;  padding:15px">
+    <div class="box"
+      style="border-top : 4px solid black; min-height: 96vh; box-shadow: 0 4px 8px 0 rgb(0 102 255 / 20%), 0 6px 20px 0 rgb(0 0 0); background: lightslategray; overflow: auto;">
+      <div>
+        <div class="field"
+          style="display: flex; justify-content: space-between; padding-bottom: 10px; flex-wrap: wrap;">
+          <div style="display: flex; ">
+            <div>
+              <p class="current_state">
+              </p>
+              <p class="current_all_state">
+            </div>
+            <div class="custom-notification" id="customNotification">
+              <strong>New Message Alert!</strong>
+              <p id="notificationMessage"></p>
+            </div>
+            </p>
+          </div>
+          <span class="wait_notice"></span>
+          <div>
+            <p class="control has-icons-left" style="width: 100%; margin-top: 7px;">
+              <input class="input" type="text" id="game_hash_input" placeholder="Game's hash (SHA256)"
+                value="fcbd34149bb5c22086061366f7635c1856d128b09b3a49dae30b46a1ad15d8a8" disabled />
+              <span class="icon is-small is-left">
+                <i class="fa fa-key"></i>
+              </span>
+            </p>
+            <div class="field has-addons">
+              <div class="field has-addons" style="gap: 5px;">
+                <p class="control has-icons-left">
+                  <input class="input" type="number" id="game_amount_input" min="1" max="100000" step="1"
+                    placeholder="Amount of games" value="100" />
+                  <span class="icon is-small is-left">
+                    <i class="fa fa-hashtag"></i>
+                  </span>
+                </p>
+                <div class="control">
+                  <a class="button is-secondary" id="chart_minus_100_submit"> -100 </a>
+                </div>
+                <div class="control">
+                  <a class="button is-secondary" id="chart_minus_50_submit"> -50 </a>
+                </div>
+                <div class="control">
+                  <a class="button is-secondary" style="background: #202935;color: #778899;" id="chart_set_100_submit">
+                    100 </a>
+                </div>
+                <div class="control">
+                  <a class="button is-secondary" style="background: #202935;color: #778899;" id="chart_set_500_submit">
+                    500 </a>
+                </div>
+                <div class="control">
+                  <a class="button is-secondary" style="background: #202935;color: #778899;" id="chart_set_1000_submit">
+                    1000 </a>
+                </div>
+                <div class="control">
+                  <a class="button is-secondary" id="chart_plus_50_submit"> +50 </a>
+                </div>
+                <div class="control">
+                  <a class="button is-secondary" id="chart_plus_100_submit"> +100 </a>
+                </div>
+                <div class="field">
+                  <p class="control">
+                    <a class="button is-primary" id="game_verify_submit"> Verify </a>
+                  </p>
+                </div>
+              </div>
+              <div class="field" style="display: none;">
+                <p class="control has-icons-left">
+                  <input class="input" type="number" id="game_red_thresold_input" min="1" max="1000" step="0.1"
+                    placeholder="Red Thresold" value="2.0" />
+                  <span class="icon is-small is-left">
+                    <i class="fa fa-hashtag"></i>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr style="padding-top: 0px; margin-top: 5px; margin-bottom: 5px; background: black;">
+
+        <div class="field salt-input" style="display: none;">
+          <p class="control has-icons-left">
+            <span class="icon is-small is-left">
+              <i class="fa fa-filter"></i>
+            </span>
+            <input class="input" type="text" id="game_salt_input" placeholder="Salt"
+              value="0000000000000000000301e2801a9a9598bfb114e574a91a887f2132f33047e6" />
+          </p>
+          <div class="salt-change-button-group">
+            <button id="bustabit_salt_button">
+              bustabit.com
+            </button>
+            <button id="ethercrash_salt_button">
+              ethercrash.io
+            </button>
+            <button id="bcgame_salt_button">
+              bc.game
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="tabs-content">
+        <div>
+          <div class="columns">
+            <div class="column" style="width: 100%;">
+              <div style="display: flex;
+                  justify-content: flex-end;
+                  overflow: auto; margin-top: 15px;">
+                <div class="each-item" id="draw-chart" style="display: flex;">
+                </div>
+              </div>
+              <br>
+              <div class="chart-part"
+                style="background: #151b27e0; border-radius: 4px; border-top: 2px solid #bfbfbf;  padding: 7px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);">
+                <canvas id="chartjs_container" style="max-height: 120px; height: 120px;"></canvas>
+              </div>
+              <div class="chart-part"
+                style="background: #151b27e0; border-radius: 4px;   border-top: 2px solid #bfbfbf;  margin-top: 7px; padding: 5px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);">
+                <input class="input" type="number" id="game_amount_input2" min="1" max="100000" step="1"
+                  placeholder="Amount of games" value="300"
+                  style="width: 100px; color: black; padding-left: 35px; background: #778899; font-weight: bold; font-size: 12px;"
+                  disabled />
+                <canvas id="chartjs_container_sec" style="max-height: 120px; height: 120px;"></canvas>
+              </div>
+              <div class="chart-part"
+                style="background: #151b27e0; border-radius: 4px;  border-top: 2px solid #bfbfbf;  margin-top: 7px; padding: 5px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.1);">
+                <input class="input" type="number" id="game_amount_input3" min="1" max="100000" step="1"
+                  placeholder="Amount of games" value="500"
+                  style="width: 100px; color: black; padding-left: 35px;  background: #778899;  font-weight: bold; font-size: 12px" disabled />
+                <canvas id="chartjs_container_third" style="max-height: 120px; height: 120px;"></canvas>
+              </div>
+
+              <div class="column ">
+
+                <div style="display: flex; justify-content: space-between;">
+                  <div></div>
+                  <input class="input" type="text" style="background: #778899;" id="game_analyze" min="1" max="100000" step="1"
+                    placeholder="Amount of games" value="1.5,2,3,4,5,6,7,8,9,10" />
+                </div>
+                <hr style="padding-top: 0px; margin-top: 5px; background: black;">
+
+                <div style="display: flex; justify-content: space-between; margin-top: 3px;">
+                </div>
+                <div class="range-analysis" style="display: flex; justify-content: space-between;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="is-hidden is-clipped" style="height: 790px">
+            <iframe id="ethercrash_user_rounds" src="https://www.ethercrash.io/user/top73" width="1000" height="900"
+              title="User Rounds Graph" scrolling="no" frameborder="0" allowfullscreen="false"
+              mozallowfullscreen="false" webkitallowfullscreen="false"></iframe>
+          </div>
+        </div>
+        <label id="game_info" class="has-text-weight-medium"></label>
+      </div>
+  </section>
+  <script src="./index.js"></script>
+</body>
+
+</html>
